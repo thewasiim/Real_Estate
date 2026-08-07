@@ -46,8 +46,17 @@ const leadLimiter = rateLimit({
 });
 
 // ──────────────────────────────────────
-// Health check
+// Root & Health checks
 // ──────────────────────────────────────
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 'OK',
+    message: 'Solaire Estates Backend is running 🚀',
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
