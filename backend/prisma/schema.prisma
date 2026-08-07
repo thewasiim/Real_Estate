@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  AGENT
+  ADMIN
+}
+
+enum ListingType {
+  BUY
+  RENT
+}
+
+enum LeadType {
+  SCHEDULE_VISIT
+  BOOK_SITE_VISIT
+  CONTACT
+  NEWSLETTER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+model User {
+  id            String     @id @default(uuid())
+  name          String
+  email         String     @unique
+  passwordHash  String
+  phone         String?
+  avatarUrl     String?
+  role          Role       @default(USER)
+  favorites     Favorite[]
+  leads         Lead[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Property {
+  id            String      @id @default(uuid())
+  slug          String      @unique
+  title         String
+  type          String      // Apartment, Villa, Independent House, Commercial, Office, Shop, Plot
+  listingType   ListingType
+  status        String      // Ready to Move, Under Construction, etc.
+  price         Int
+  city          String
+  locality      String
+  address       String
+  area          Int
+  areaUnit      String      @default("sqft")
+  bhk           Int
+  bathrooms     Int
+  parking       Int
+  furnishing    String
+  amenities     String[]
+  images        String[]    // Cloudinary URLs
+  floorPlans    String[]
+  videoTourUrl  String?
+  tourUrl360    String?
+  description   String
+  nearbySchools String[]
+  nearbyHospitals String[]
+  nearbyMetro   String[]
+  lat           Float?
+  lng           Float?
+  isFeatured    Boolean     @default(false)
+  popularityScore Int       @default(0)
+  agentId       String?
+  agent         Agent?      @relation(fields: [agentId], references: [id])
+  favorites     Favorite[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Project {
+  id             String   @id @default(uuid())
+  slug           String   @unique
+  name           String
+  builder        String
+  startingPrice  Int
+  possessionDate DateTime
+  city           String
+  locality       String
+  images         String[]
+  description    String
+  amenities      String[]
+  unitTypes      String[]
+  statusStage    String   // Under Construction | RERA Approved | Nearing Possession | Ready
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Agent {
+  id              String     @id @default(uuid())
+  name            String
+  photoUrl        String
+  phone           String
+  whatsapp        String
+  email           String
+  role            String     // e.g. "Senior Property Consultant"
+  city            String
+  experienceYears Int
+  properties      Property[]
+  createdAt       DateTime   @default(now())
+}
+
+model Favorite {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId])
+}
+
+model Lead {
+  id          String     @id @default(uuid())
+  type        LeadType
+  name        String
+  email       String
+  phone       String
+  message     String?
+  propertyId  String?    // set for SCHEDULE_VISIT
+  preferredDate DateTime?
+  preferredTime String?
+  status      LeadStatus @default(NEW)
+  userId      String?    // set if submitted by a logged-in user
+  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+}
+
+model Testimonial {
+  id       String @id @default(uuid())
+  name     String
+  photoUrl String
+  rating   Int
+  review   String
+}
+
+model BlogPost {
+  id       String   @id @default(uuid())
+  slug     String   @unique
+  title    String
+  coverUrl String
+  excerpt  String
+  content  String
+  author   String
+  date     DateTime @default(now())
+}
+
+model FAQ {
+  id       String @id @default(uuid())
+  question String
+  answer   String
+}
