@@ -1293,6 +1293,18 @@ footer {
   color: rgba(255, 255, 255, 0.5);
 }
 
+.footer-credit-link {
+  color: #FFFFFF;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.footer-credit-link:hover {
+  color: var(--color-accent);
+}
+
 @media (min-width: 640px) {
   .footer-bottom {
     flex-direction: row;

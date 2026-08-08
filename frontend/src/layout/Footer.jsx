@@ -53,6 +53,17 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <span>© 2026 F.B. Developer. All rights reserved.</span>
+        <span>
+          Made by{' '}
+          <a
+            href="https://www.instagram.com/thewasiim?igsh=MWpqN3ZxMGVoOWlxaw=="
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-credit-link"
+          >
+            thewasiim
+          </a>
+        </span>
         <span>Privacy · Terms · RERA</span>
       </div>
       </Reveal>
