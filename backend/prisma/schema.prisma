@@ -83,6 +83,12 @@ model Property {
   favorites     Favorite[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+
+  @@index([city])
+  @@index([type])
+  @@index([listingType])
+  @@index([isFeatured])
+  @@index([city, type, listingType])
 }
 
 model Project {
@@ -101,6 +107,9 @@ model Project {
   statusStage    String   // Under Construction | RERA Approved | Nearing Possession | Ready
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
+  @@index([city])
+  @@index([statusStage])
 }
 
 model Agent {
@@ -115,6 +124,8 @@ model Agent {
   experienceYears Int
   properties      Property[]
   createdAt       DateTime   @default(now())
+
+  @@index([city])
 }
 
 model Favorite {
@@ -142,6 +153,9 @@ model Lead {
   userId      String?    // set if submitted by a logged-in user
   user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
   createdAt   DateTime   @default(now())
+
+  @@index([status])
+  @@index([type])
 }
 
 model Testimonial {

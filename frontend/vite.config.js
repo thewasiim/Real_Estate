@@ -12,4 +12,28 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react':  ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui':     ['framer-motion', 'lucide-react'],
+          'vendor-net':    ['axios'],
+          'admin-panel':   [
+            './src/pages/admin/AdminDashboard.jsx',
+            './src/pages/admin/AdminProperties.jsx',
+            './src/pages/admin/AdminProjects.jsx',
+            './src/pages/admin/AdminAgents.jsx',
+            './src/pages/admin/AdminLeads.jsx',
+            './src/pages/admin/AdminUsers.jsx',
+            './src/pages/admin/AdminBlog.jsx',
+            './src/pages/admin/AdminTestimonials.jsx',
+            './src/pages/admin/AdminFaq.jsx',
+          ],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
 });
+
