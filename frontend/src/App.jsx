@@ -10,10 +10,12 @@ import Footer from './layout/Footer';
 import BackToTop from './layout/BackToTop';
 import AppRoutes from './routes/AppRoutes';
 import ScrollReveal from './components/shared/ScrollReveal';
+import ScrollToTop from './components/shared/ScrollToTop';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AuthProvider>
         <FilterProvider>
           <FavoritesProvider>
