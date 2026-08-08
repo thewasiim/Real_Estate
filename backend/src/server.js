@@ -5,6 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import { errorHandler } from './middleware/errorHandler.js';
+import { connectDB } from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import propertyRoutes from './routes/properties.routes.js';
 import projectRoutes from './routes/projects.routes.js';
@@ -22,7 +23,7 @@ const PORT = process.env.PORT || 4000;
 // ──────────────────────────────────────
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: process.env.CORS_ORIGIN || '*',
   credentials: true,
 }));
 app.use(cookieParser());
@@ -93,11 +94,15 @@ app.use('/api/*', (req, res) => {
 app.use(errorHandler);
 
 // ──────────────────────────────────────
-// Start
+// Start Server with Database Connection
 // ──────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`✦ Solaire API running on http://localhost:${PORT}`);
-  console.log(`  Health check: http://localhost:${PORT}/api/health`);
-});
+async function startServer() {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`✓ Server Running on port ${PORT}`);
+  });
+}
+
+startServer();
 
 export default app;
