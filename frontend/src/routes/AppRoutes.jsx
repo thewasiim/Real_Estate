@@ -18,6 +18,9 @@ import Agents from '../pages/Agents';
 import About from '../pages/About';
 import Contact from '../pages/Contact';
 import Profile from '../pages/Profile';
+import Blog from '../pages/Blog';
+import BlogPost from '../pages/BlogPost';
+import AgentDetails from '../pages/AgentDetails';
 
 // Admin Pages
 import AdminDashboard from '../pages/admin/AdminDashboard';
@@ -53,10 +56,10 @@ export default function AppRoutes() {
       <Route path="/projects" element={<Projects />} />
       <Route path="/projects/:id" element={<ProjectDetails />} />
       <Route path="/agents" element={<Agents />} />
-      <Route path="/agents/:id" element={<Placeholder title="Agent Details" />} />
+      <Route path="/agents/:id" element={<AgentDetails />} />
       <Route path="/about" element={<About />} />
-      <Route path="/blog" element={<Placeholder title="Blog" />} />
-      <Route path="/blog/:slug" element={<Placeholder title="Blog Post" />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/blog/:slug" element={<BlogPost />} />
       <Route path="/contact" element={<Contact />} />
 
       {/* Auth routes */}
