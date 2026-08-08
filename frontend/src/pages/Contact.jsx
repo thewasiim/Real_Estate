@@ -45,32 +45,32 @@ export default function Contact() {
   ];
 
   return (
-    <main style={{ paddingTop: '120px' }}>
+    <main className="standard-page" style={{ paddingTop: 'calc(var(--nav-height) + 30px)', paddingBottom: '80px' }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', padding: '0 var(--gutter) 60px' }}>
+      <div className="page-intro" style={{ textAlign: 'center', padding: '0 var(--gutter) 48px', maxWidth: '600px', margin: '0 auto' }}>
         <p className="eyebrow">GET IN TOUCH</p>
-        <h1 style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", sans-serif', fontSize: 'clamp(2rem, 5vw, 3.2rem)', marginBottom: '14px', marginTop: '8px' }}>
+        <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', marginBottom: '12px', marginTop: '8px' }}>
           Private Advisory Contact
         </h1>
-        <p style={{ color: 'var(--muted)', fontSize: '14px', maxWidth: '520px', margin: '0 auto', lineHeight: 1.7 }}>
+        <p style={{ color: 'var(--color-ink-muted)', fontSize: '14px', lineHeight: 1.6 }}>
           Reach out to our Private Concierge for estate inquiries, site visit requests, NRI advisory, or media partnerships.
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '60px', padding: '0 var(--gutter) 100px', maxWidth: '1280px', margin: '0 auto', alignItems: 'flex-start' }}>
+      <div className="contact-layout">
         {/* Contact Info */}
         <div>
-          <h2 style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", sans-serif', fontSize: '1.6rem', marginBottom: '28px' }}>Reach Us</h2>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '24px' }}>Reach Us</h2>
 
-          <div style={{ display: 'grid', gap: '24px', marginBottom: '40px' }}>
+          <div style={{ display: 'grid', gap: '20px', marginBottom: '36px' }}>
             {contacts.map(({ icon: Icon, label, value, href }) => (
-              <div key={label} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#f4f0ec', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+              <div key={label} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-bg-alt)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
                   <Icon size={16} style={{ color: 'var(--color-accent)' }} />
                 </div>
                 <div>
-                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '.07em', color: 'var(--muted)', marginBottom: '3px' }}>{label.toUpperCase()}</p>
-                  <a href={href} style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)', textDecoration: 'none' }}>{value}</a>
+                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '.07em', color: 'var(--color-ink-muted)', marginBottom: '3px' }}>{label.toUpperCase()}</p>
+                  <a href={href} style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-ink)', textDecoration: 'none', wordBreak: 'break-word' }}>{value}</a>
                 </div>
               </div>
             ))}
@@ -78,29 +78,29 @@ export default function Contact() {
 
           {/* Map Placeholder */}
           <div style={{
-            height: '220px', borderRadius: '8px', background: 'linear-gradient(135deg, #f4f0ec, #e8e0d4)',
+            height: '200px', borderRadius: 'var(--radius-md)', background: 'var(--color-bg-alt)',
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            border: '1px solid var(--line)', gap: '10px',
+            border: '1px solid var(--color-border)', gap: '8px',
           }}>
-            <MapPin size={28} style={{ color: 'var(--color-accent)' }} />
-            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ink)' }}>F.B. Developer HQ</p>
-            <p style={{ fontSize: '12px', color: 'var(--muted)' }}>Nariman Point, Mumbai</p>
+            <MapPin size={26} style={{ color: 'var(--color-accent)' }} />
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-ink)' }}>F.B. Developer HQ</p>
+            <p style={{ fontSize: '12px', color: 'var(--color-ink-muted)' }}>Nariman Point, Mumbai</p>
           </div>
         </div>
 
-        {/* Contact Form */}
-        <div style={{ border: '1px solid var(--line)', borderRadius: '8px', padding: '40px' }}>
+        {/* Contact Form Container */}
+        <div>
           {submitted ? (
-            <div style={{ textAlign: 'center', padding: '40px 0' }}>
-              <CheckCircle size={52} style={{ color: '#38A169', margin: '0 auto 16px' }} />
-              <h2 style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", sans-serif', marginBottom: '10px' }}>Message Received</h2>
-              <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.7 }}>
+            <div style={{ textAlign: 'center', padding: '30px 0' }}>
+              <CheckCircle size={48} style={{ color: '#38A169', margin: '0 auto 16px' }} />
+              <h2>Message Received</h2>
+              <p style={{ color: 'var(--color-ink-muted)', fontSize: '13px', lineHeight: 1.6, marginTop: '8px' }}>
                 Thank you, {form.name}. Our Private Advisory Desk will respond within one business day.
               </p>
             </div>
           ) : (
             <>
-              <h2 style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", sans-serif', fontSize: '1.4rem', marginBottom: '24px' }}>Send a Private Enquiry</h2>
+              <h2 style={{ fontSize: '1.4rem', marginBottom: '20px' }}>Send a Private Enquiry</h2>
 
               {error && (
                 <div className="auth-error" style={{ marginBottom: '16px' }}>
@@ -127,7 +127,7 @@ export default function Contact() {
 
                 <div className="form-group">
                   <label htmlFor="contact-subject">Subject</label>
-                  <select id="contact-subject" name="subject" value={form.subject} onChange={handleChange} style={{ padding: '11px 12px', border: '1px solid var(--line)', borderRadius: '4px', fontSize: '13px', outline: 'none' }}>
+                  <select id="contact-subject" name="subject" value={form.subject} onChange={handleChange}>
                     <option value="">Select a topic</option>
                     <option value="Property Enquiry">Property Enquiry</option>
                     <option value="Site Visit Request">Site Visit Request</option>
@@ -144,7 +144,6 @@ export default function Contact() {
                     id="contact-message" name="message" rows={4} required
                     value={form.message} onChange={handleChange}
                     placeholder="Tell us about your real estate requirements..."
-                    style={{ padding: '12px', border: '1px solid var(--line)', borderRadius: '4px', fontSize: '13px', outline: 'none', resize: 'vertical' }}
                   />
                 </div>
 
