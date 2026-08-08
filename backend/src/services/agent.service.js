@@ -8,6 +8,14 @@ export const agentService = {
 
     const where = {};
     if (query.city) where.city = { contains: query.city, mode: 'insensitive' };
+    if (query.search) {
+      where.OR = [
+        { name: { contains: query.search, mode: 'insensitive' } },
+        { email: { contains: query.search, mode: 'insensitive' } },
+        { city: { contains: query.search, mode: 'insensitive' } },
+        { role: { contains: query.search, mode: 'insensitive' } },
+      ];
+    }
 
     const [items, total] = await prisma.$transaction([
       prisma.agent.findMany({ where, orderBy: { name: 'asc' }, skip, take: limit }),

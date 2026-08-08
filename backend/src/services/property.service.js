@@ -14,6 +14,19 @@ function buildWhereClause(q) {
   if (q.bhk) where.bhk = parseInt(q.bhk);
   if (q.bathrooms) where.bathrooms = parseInt(q.bathrooms);
   if (q.readyToMove === 'true') where.status = 'Ready to Move';
+  if (q.isFeatured !== undefined && q.isFeatured !== '') {
+    where.isFeatured = q.isFeatured === 'true';
+  }
+  if (q.status) where.status = { contains: q.status, mode: 'insensitive' };
+
+  if (q.search) {
+    where.OR = [
+      { title: { contains: q.search, mode: 'insensitive' } },
+      { city: { contains: q.search, mode: 'insensitive' } },
+      { locality: { contains: q.search, mode: 'insensitive' } },
+      { address: { contains: q.search, mode: 'insensitive' } },
+    ];
+  }
 
   if (q.minPrice || q.maxPrice) {
     where.price = {};

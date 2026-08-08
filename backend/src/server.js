@@ -14,6 +14,10 @@ import leadRoutes from './routes/leads.routes.js';
 import favoriteRoutes from './routes/favorites.routes.js';
 import userRoutes from './routes/users.routes.js';
 import uploadRoutes from './routes/uploads.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import blogRoutes from './routes/blog.routes.js';
+import testimonialRoutes from './routes/testimonial.routes.js';
+import faqRoutes from './routes/faq.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -73,6 +77,7 @@ app.get('/api/health', (req, res) => {
 // API Routes
 // ──────────────────────────────────────
 app.use('/api/auth', authLimiter, authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/agents', agentRoutes);
@@ -80,6 +85,9 @@ app.use('/api/leads', leadLimiter, leadRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/uploads', uploadRoutes);
+app.use('/api/blog', blogRoutes);
+app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/faqs', faqRoutes);
 
 // ──────────────────────────────────────
 // 404 for unmatched API routes

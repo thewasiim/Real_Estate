@@ -55,5 +55,6 @@ router.post('/',      optionalToken, validate(baseLeadSchema), leadController.cr
 // Admin only
 router.get('/',       verifyToken, requireRole('ADMIN'), leadController.getAll);
 router.patch('/:id',  verifyToken, requireRole('ADMIN'), validate(updateLeadSchema), leadController.updateStatus);
+router.delete('/:id', verifyToken, requireRole('ADMIN'), leadController.remove);
 
 export default router;

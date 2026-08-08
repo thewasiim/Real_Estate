@@ -25,4 +25,11 @@ export const leadController = {
       res.json({ success: true, data: lead });
     } catch (err) { next(err); }
   },
+
+  async remove(req, res, next) {
+    try {
+      await leadService.remove(req.params.id);
+      res.json({ success: true });
+    } catch (err) { next(err); }
+  },
 };

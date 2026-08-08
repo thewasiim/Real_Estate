@@ -1,7 +1,9 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, AdminRoute } from '../components/shared/ProtectedRoute';
-import Profile from '../pages/Profile';
+
+// Layout
+import AdminLayout from '../layout/admin/AdminLayout';
 
 // Public Pages
 import NotFound from '../pages/NotFound';
@@ -15,8 +17,20 @@ import ProjectDetails from '../pages/ProjectDetails';
 import Agents from '../pages/Agents';
 import About from '../pages/About';
 import Contact from '../pages/Contact';
+import Profile from '../pages/Profile';
 
-// Placeholder for pages not yet built
+// Admin Pages
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminProperties from '../pages/admin/AdminProperties';
+import AdminProjects from '../pages/admin/AdminProjects';
+import AdminAgents from '../pages/admin/AdminAgents';
+import AdminLeads from '../pages/admin/AdminLeads';
+import AdminUsers from '../pages/admin/AdminUsers';
+import AdminBlog from '../pages/admin/AdminBlog';
+import AdminTestimonials from '../pages/admin/AdminTestimonials';
+import AdminFaq from '../pages/admin/AdminFaq';
+
+// Helper for simple public placeholders
 function Placeholder({ title }) {
   return (
     <main className="placeholder-page">
@@ -50,25 +64,24 @@ export default function AppRoutes() {
       <Route path="/register" element={<Register />} />
 
       {/* Protected user routes */}
+      <Route path="/favorites" element={<Navigate to="/profile" replace />} />
       <Route
-        path="/favorites"
-        element={<Navigate to="/profile" replace />}
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
       />
-<Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
 
-      {/* Admin routes */}
+      {/* Admin routes with AdminLayout wrapper & AdminRoute guard */}
       <Route
         path="/admin"
         element={
           <AdminRoute>
-            <Placeholder title="Admin Dashboard" />
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
           </AdminRoute>
         }
       />
@@ -76,7 +89,9 @@ export default function AppRoutes() {
         path="/admin/properties"
         element={
           <AdminRoute>
-            <Placeholder title="Manage Properties" />
+            <AdminLayout>
+              <AdminProperties />
+            </AdminLayout>
           </AdminRoute>
         }
       />
@@ -84,7 +99,9 @@ export default function AppRoutes() {
         path="/admin/projects"
         element={
           <AdminRoute>
-            <Placeholder title="Manage Projects" />
+            <AdminLayout>
+              <AdminProjects />
+            </AdminLayout>
           </AdminRoute>
         }
       />
@@ -92,7 +109,9 @@ export default function AppRoutes() {
         path="/admin/agents"
         element={
           <AdminRoute>
-            <Placeholder title="Manage Agents" />
+            <AdminLayout>
+              <AdminAgents />
+            </AdminLayout>
           </AdminRoute>
         }
       />
@@ -100,7 +119,9 @@ export default function AppRoutes() {
         path="/admin/leads"
         element={
           <AdminRoute>
-            <Placeholder title="Manage Leads" />
+            <AdminLayout>
+              <AdminLeads />
+            </AdminLayout>
           </AdminRoute>
         }
       />
@@ -108,7 +129,39 @@ export default function AppRoutes() {
         path="/admin/users"
         element={
           <AdminRoute>
-            <Placeholder title="Manage Users" />
+            <AdminLayout>
+              <AdminUsers />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/blog"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <AdminBlog />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/testimonials"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <AdminTestimonials />
+            </AdminLayout>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/faq"
+        element={
+          <AdminRoute>
+            <AdminLayout>
+              <AdminFaq />
+            </AdminLayout>
           </AdminRoute>
         }
       />

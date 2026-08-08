@@ -9,6 +9,14 @@ export const projectService = {
     const where = {};
     if (query.city)   where.city = { contains: query.city, mode: 'insensitive' };
     if (query.status) where.statusStage = query.status;
+    if (query.search) {
+      where.OR = [
+        { name: { contains: query.search, mode: 'insensitive' } },
+        { builder: { contains: query.search, mode: 'insensitive' } },
+        { city: { contains: query.search, mode: 'insensitive' } },
+        { locality: { contains: query.search, mode: 'insensitive' } },
+      ];
+    }
 
     const [items, total] = await prisma.$transaction([
       prisma.project.findMany({ where, orderBy: { createdAt: 'desc' }, skip, take: limit }),

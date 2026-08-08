@@ -8,6 +8,13 @@ export const userService = {
 
     const where = {};
     if (query.role) where.role = query.role;
+    if (query.search) {
+      where.OR = [
+        { name: { contains: query.search, mode: 'insensitive' } },
+        { email: { contains: query.search, mode: 'insensitive' } },
+        { phone: { contains: query.search, mode: 'insensitive' } },
+      ];
+    }
 
     const [items, total] = await prisma.$transaction([
       prisma.user.findMany({

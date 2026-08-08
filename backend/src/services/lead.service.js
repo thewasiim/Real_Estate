@@ -20,6 +20,13 @@ export const leadService = {
     const where = {};
     if (query.type)   where.type   = query.type;
     if (query.status) where.status = query.status;
+    if (query.search) {
+      where.OR = [
+        { name: { contains: query.search, mode: 'insensitive' } },
+        { email: { contains: query.search, mode: 'insensitive' } },
+        { phone: { contains: query.search, mode: 'insensitive' } },
+      ];
+    }
 
     const [items, total] = await prisma.$transaction([
       prisma.lead.findMany({
@@ -40,5 +47,12 @@ export const leadService = {
    */
   async updateStatus(id, status) {
     return prisma.lead.update({ where: { id }, data: { status } });
+  },
+
+  /**
+   * Admin: remove lead.
+   */
+  async remove(id) {
+    return prisma.lead.delete({ where: { id } });
   },
 };
