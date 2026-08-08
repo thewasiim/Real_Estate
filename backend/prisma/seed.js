@@ -25,8 +25,8 @@ async function main() {
 
   const adminUser = await prisma.user.create({
     data: {
-      name: 'Solaire Curator',
-      email: 'admin@solaire.in',
+      name: 'F.B. Developer Curator',
+      email: 'admin@fbdeveloper.in',
       passwordHash: adminPasswordHash,
       phone: '+91 98765 00000',
       role: 'ADMIN',
@@ -43,7 +43,7 @@ async function main() {
     },
   });
 
-  console.log('👤 Created Users: admin@solaire.in and aarav@example.com');
+  console.log('👤 Created Users: admin@fbdeveloper.in and aarav@example.com');
 
   // 3. Create Agents
   const agent1 = await prisma.agent.create({
@@ -52,7 +52,7 @@ async function main() {
       photoUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80',
       phone: '+91 98210 99887',
       whatsapp: '+919821099887',
-      email: 'rohan.m@solaire.in',
+      email: 'rohan.m@fbdeveloper.in',
       role: 'Senior Luxury Specialist',
       city: 'Mumbai',
       experienceYears: 12,
@@ -65,7 +65,7 @@ async function main() {
       photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
       phone: '+91 98111 44556',
       whatsapp: '+919811144556',
-      email: 'priya.n@solaire.in',
+      email: 'priya.n@fbdeveloper.in',
       role: 'Private Advisory Partner',
       city: 'Delhi NCR',
       experienceYears: 9,
@@ -78,7 +78,7 @@ async function main() {
       photoUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80',
       phone: '+91 99000 88776',
       whatsapp: '+919900088776',
-      email: 'vikram.r@solaire.in',
+      email: 'vikram.r@fbdeveloper.in',
       role: 'Coastal Estate Director',
       city: 'Goa',
       experienceYears: 15,
@@ -271,13 +271,13 @@ async function main() {
         name: 'Kabir & Sunaina Kapoor',
         photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
         rating: 5,
-        review: 'Solaire provided an unmatched advisory experience. Finding our Worli oceanfront penthouse was seamless, confidential, and exceptionally refined.',
+        review: 'F.B. Developer provided an unmatched advisory experience. Finding our Worli oceanfront penthouse was seamless, confidential, and exceptionally refined.',
       },
       {
         name: 'Devraj Singhania',
         photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
         rating: 5,
-        review: 'The discretion and depth of market insights shown by the Solaire Private Office in acquiring our Goa villa was beyond standard brokerage.',
+        review: 'The discretion and depth of market insights shown by the F.B. Developer Private Office in acquiring our Goa villa was beyond standard brokerage.',
       },
     ],
   });
@@ -291,7 +291,7 @@ async function main() {
         coverUrl: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
         excerpt: 'An analysis of prime sea-front capital values, ultra-HNW buyer migration, and upcoming coastal infrastructure.',
         content: 'Full report content on coastal road impacts and high-end rental yields in Bandra and Worli...',
-        author: 'Solaire Research Team',
+        author: 'F.B. Developer Research Team',
       },
     ],
   });
@@ -304,7 +304,7 @@ async function main() {
         answer: 'You can request a visit directly from any property listing or via our Private Concierge desk. We arrange door-to-door luxury transport and dedicated property advisor presence.',
       },
       {
-        question: 'Does Solaire assist international Non-Resident Indians (NRIs)?',
+        question: 'Does F.B. Developer assist international Non-Resident Indians (NRIs)?',
         answer: 'Yes, our dedicated NRI Private Advisory desk manages complete legal compliance, cross-border remittance guidance, and property management post-acquisition.',
       },
     ],

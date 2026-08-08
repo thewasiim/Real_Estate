@@ -53,7 +53,7 @@ app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
     status: 'OK',
-    message: 'Solaire Estates Backend is running 🚀',
+    message: 'F.B. Developer Backend is running 🚀',
     timestamp: new Date().toISOString(),
   });
 });

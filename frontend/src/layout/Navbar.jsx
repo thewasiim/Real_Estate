@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X, User, Heart, Settings, LogOut } from 'lucide-react';
 import { useScrollNavbar } from '../hooks/useScrollNavbar';
 import { useAuth } from '../context/AuthContext';
 import BookVisitModal from '../components/shared/BookVisitModal';
@@ -23,6 +23,7 @@ export default function Navbar() {
   const { isLoggedIn, isAdmin, user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showBookVisit, setShowBookVisit] = useState(false);
+  const userMenuRef = useRef(null);
 
   // Home page has hero; non-hero pages must be solid by default (design.md §9)
   const isHomePage = location.pathname === '/';
@@ -33,6 +34,19 @@ export default function Navbar() {
     setMobileOpen(false);
     setDropdownOpen(false);
   }, [location.pathname]);
+
+  // Click outside user menu to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -54,30 +68,54 @@ export default function Navbar() {
         {/* Desktop actions */}
         <div className="nav-actions">
           {isLoggedIn ? (
-            <div className="user-menu" style={{ position: 'relative' }}>
+            <div ref={userMenuRef} className="user-menu-container">
               <button
                 className="user-avatar-btn"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
+                aria-expanded={dropdownOpen}
                 aria-label="User menu"
               >
-                {user?.avatarUrl ? (
-                  <img src={user.avatarUrl} alt={user.name} className="avatar-img" />
-                ) : (
-                  <span className="avatar-initials">
-                    {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                  </span>
-                )}
-                <span className="user-name">{user?.name?.split(' ')[0]}</span>
+                <div className="avatar-circle">
+                  {user?.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span>
+                      {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </span>
+                  )}
+                </div>
+                <span className="user-name hidden sm:inline">
+                  {user?.name?.split(' ')[0]}
+                </span>
               </button>
 
-              {dropdownOpen && (
-                <div className="user-dropdown">
-                  <Link to="/profile">Profile</Link>
-                  <Link to="/favorites">Favorites</Link>
-                  {isAdmin && <Link to="/admin">Admin Panel</Link>}
-                  <button onClick={logout}>Logout</button>
-                </div>
-              )}
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    className="user-dropdown"
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <Link to="/profile" className="dropdown-item">
+                      <User size={15} /> Profile
+                    </Link>
+                    <Link to="/favorites" className="dropdown-item">
+                      <Heart size={15} /> Favorites
+                    </Link>
+                    {isAdmin && (
+                      <Link to="/admin" className="dropdown-item">
+                        <Settings size={15} /> Admin Panel
+                      </Link>
+                    )}
+                    <div className="dropdown-divider" />
+                    <button onClick={logout} className="dropdown-item text-red-600">
+                      <LogOut size={15} /> Logout
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ) : (
             <Link to="/login" className="login">
@@ -118,12 +156,21 @@ export default function Navbar() {
               ))}
               {isLoggedIn ? (
                 <>
-                  <Link to="/profile">Profile</Link>
-                  <Link to="/favorites">Favorites</Link>
-                  {isAdmin && <Link to="/admin">Admin Panel</Link>}
-                  <button onClick={logout} className="btn btn-light">
-                    Logout
-                  </button>
+                    <Link to="/profile" className="dropdown-item flex items-center">
+                      <User className="mr-2 w-4 h-4"/> Profile
+                    </Link>
+                    <Link to="/favorites" className="dropdown-item flex items-center">
+                      <Heart className="mr-2 w-4 h-4"/> Favorites
+                    </Link>
+                    {isAdmin && (
+                      <Link to="/admin" className="dropdown-item flex items-center">
+                        <Settings className="mr-2 w-4 h-4"/> Admin Panel
+                      </Link>
+                    )}
+                    <button onClick={logout} className="dropdown-item flex items-center logout-btn">
+                      <LogOut className="mr-2 w-4 h-4"/> Logout
+                    </button>
+
                 </>
               ) : (
                 <Link to="/login" className="btn btn-light">

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, AdminRoute } from '../components/shared/ProtectedRoute';
+import Profile from '../pages/Profile';
 
 // Public Pages
 import NotFound from '../pages/NotFound';
@@ -51,20 +52,16 @@ export default function AppRoutes() {
       {/* Protected user routes */}
       <Route
         path="/favorites"
-        element={
-          <ProtectedRoute>
-            <Placeholder title="My Favorites" />
-          </ProtectedRoute>
-        }
+        element={<Navigate to="/profile" replace />}
       />
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Placeholder title="My Profile" />
-          </ProtectedRoute>
-        }
-      />
+<Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
       {/* Admin routes */}
       <Route

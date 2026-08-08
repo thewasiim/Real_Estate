@@ -43,7 +43,7 @@ router.post(
       // Stream buffer to Cloudinary
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: 'solaire-estates', resource_type: 'image' },
+          { folder: 'fb-developer', resource_type: 'image' },
           (error, result) => {
             if (error) reject(error);
             else resolve(result);

@@ -2,23 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 
 export default function BackToTop() {
-  const [show, setShow] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setShow(window.scrollY > 500);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setVisible(window.scrollY > 480);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  if (!show) return null;
-
-  return (
-    <button
-      className="backtop"
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      aria-label="Back to top"
-    >
-      <ArrowUp size={18} />
-    </button>
-  );
+    return (
+      <button
+        type="button"
+        className={`backtop${visible ? ' backtop--visible' : ''}${hovered ? ' backtop--hovered' : ''}`}
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { window.scrollTo({ top: 0, behavior: 'smooth' }); }}}
+        aria-label="Back to top"
+        tabIndex={visible ? 0 : -1}
+      >
+        <span className="backtop__track" aria-hidden="true" />
+        <span className="backtop__icon">
+          <ArrowUp size={16} strokeWidth={2.2} />
+        </span>
+      </button>
+    );
 }

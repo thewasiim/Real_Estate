@@ -61,11 +61,11 @@ const AMENITIES = [
 // FAQ List
 const FAQS = [
   {
-    q: 'How does Solaire verify luxury property listings?',
-    a: 'Every property listed on Solaire undergoes a rigorous multi-stage verification process including legal title search, physical inspection by senior advisors, RERA verification, and architectural valuation.'
+    q: 'How does F.B. Developer verify luxury property listings?',
+    a: 'Every property listed on F.B. Developer undergoes a rigorous multi-stage verification process including legal title search, physical inspection by senior advisors, RERA verification, and architectural valuation.'
   },
   {
-    q: 'Does Solaire offer private off-market property representation?',
+    q: 'Does F.B. Developer offer private off-market property representation?',
     a: 'Yes. Over 30% of our portfolio consists of confidential off-market estates. We coordinate private non-disclosure viewings for HNWIs and institutional buyers.'
   },
   {
@@ -337,11 +337,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 4. Why Choose Solaire ────────────────────────────────────────────── */}
+      {/* ── 4. Why Choose F.B. Developer ────────────────────────────────────── */}
       <section className="section why">
         <div className="section-title">
           <div>
-            <p className="eyebrow">THE SOLAIRE DIFFERENCE</p>
+            <p className="eyebrow">THE F.B. DEVELOPER DIFFERENCE</p>
             <h2>Bespoke Real Estate Advisory</h2>
           </div>
         </div>
@@ -495,7 +495,7 @@ export default function Home() {
           <div>
             <p className="eyebrow">UNRIVALED COMFORT</p>
             <h2>Signature Amenities</h2>
-            <p className="lede">Every Solaire listing offers world-class facilities and lifestyle features.</p>
+            <p className="lede">Every F.B. Developer listing offers world-class facilities and lifestyle features.</p>
           </div>
         </div>
 
@@ -519,7 +519,7 @@ export default function Home() {
         <div className="quote-mark">“</div>
         <div className="stars">★★★★★</div>
         <blockquote>
-          "Finding our Worli sea-front penthouse with Solaire was a seamless, confidential, and deeply satisfying journey. Their market intelligence is unmatched."
+          "Finding our Worli sea-front penthouse with F.B. Developer was a seamless, confidential, and deeply satisfying journey. Their market intelligence is unmatched."
         </blockquote>
         <div className="testimonial-person">
           <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" alt="Kabir Kapoor" />
@@ -556,7 +556,7 @@ export default function Home() {
       <section className="section">
         <div className="section-title">
           <div>
-            <p className="eyebrow">SOLAIRE JOURNAL</p>
+            <p className="eyebrow">F.B. DEVELOPER JOURNAL</p>
             <h2>Insights & Real Estate Trends</h2>
             <p className="lede">Perspectives on architecture, luxury wealth, and market dynamics.</p>
           </div>
