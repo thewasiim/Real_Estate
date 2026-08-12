@@ -230,52 +230,16 @@ export default function PropertyDetails() {
           )}
 
           {/* Interactive EMI Calculator Widget */}
-          <div className="info-block">
-            <h2>Mortgage & EMI Estimator</h2>
+          <div className="info-block emi-section">
+            <div className="emi-section-heading"><div><p className="eyebrow">FINANCING OVERVIEW</p><h2>Mortgage & EMI Estimator</h2></div><span className="emi-live">Live estimate</span></div>
             <div className="emi">
-              <p className="eyebrow">ESTIMATED MONTHLY PAYMENT</p>
-              <h3>{formatCurrency(monthlyEmi)} / month</h3>
-
-              <label>
-                Down Payment: <b>{downPaymentPercent}% ({formatCurrency(downPayment)})</b>
-                <input
-                  type="range"
-                  min="10"
-                  max="50"
-                  step="5"
-                  value={downPaymentPercent}
-                  onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
-                />
-              </label>
-
-              <label>
-                Interest Rate: <b>{interestRate}%</b>
-                <input
-                  type="range"
-                  min="6"
-                  max="14"
-                  step="0.25"
-                  value={interestRate}
-                  onChange={(e) => setInterestRate(Number(e.target.value))}
-                />
-              </label>
-
-              <label>
-                Tenure: <b>{tenureYears} Years</b>
-                <input
-                  type="range"
-                  min="5"
-                  max="30"
-                  step="5"
-                  value={tenureYears}
-                  onChange={(e) => setTenureYears(Number(e.target.value))}
-                />
-              </label>
-
-              <div>
-                <span>Principal Loan Amount:</span>
-                <strong>{formatCurrency(loanAmount)}</strong>
+              <div className="emi-payment"><span>Estimated monthly payment</span><strong>{formatCurrency(monthlyEmi)}</strong><small>per month</small></div>
+              <div className="emi-controls">
+                <label className="emi-control"><span className="emi-control-label">Down payment</span><strong>{downPaymentPercent}% <small>{formatCurrency(downPayment)}</small></strong><input className="emi-range" type="range" min="10" max="50" step="5" value={downPaymentPercent} style={{ '--range-progress': ((downPaymentPercent - 10) / 40) * 100 + '%' }} onChange={(e) => setDownPaymentPercent(Number(e.target.value))} /><span className="emi-range-scale"><small>10%</small><small>50%</small></span></label>
+                <label className="emi-control"><span className="emi-control-label">Interest rate</span><strong>{interestRate}% <small>p.a.</small></strong><input className="emi-range" type="range" min="6" max="14" step="0.25" value={interestRate} style={{ '--range-progress': ((interestRate - 6) / 8) * 100 + '%' }} onChange={(e) => setInterestRate(Number(e.target.value))} /><span className="emi-range-scale"><small>6%</small><small>14%</small></span></label>
+                <label className="emi-control"><span className="emi-control-label">Loan tenure</span><strong>{tenureYears} <small>years</small></strong><input className="emi-range" type="range" min="5" max="30" step="5" value={tenureYears} style={{ '--range-progress': ((tenureYears - 5) / 25) * 100 + '%' }} onChange={(e) => setTenureYears(Number(e.target.value))} /><span className="emi-range-scale"><small>5 years</small><small>30 years</small></span></label>
               </div>
+              <div className="emi-principal"><span>Principal loan amount</span><strong>{formatCurrency(loanAmount)}</strong></div>
             </div>
           </div>
         </div>
