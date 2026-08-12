@@ -13,12 +13,14 @@ import { useRecentlyViewed } from '../context/RecentlyViewedContext';
 import ScheduleVisitModal from '../components/property/ScheduleVisitModal';
 import Button from '../components/ui/Button';
 import NotFound from './NotFound';
+import EmptyState from '../components/ui/EmptyState';
 
 export default function PropertyDetails() {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState('');
 
   // Modals & Gallery
   const [isVisitOpen, setIsVisitOpen] = useState(false);
@@ -39,25 +41,27 @@ export default function PropertyDetails() {
     async function loadProperty() {
       setLoading(true);
       setNotFound(false);
+      setError('');
       try {
         const res = await propertiesApi.getById(id);
         if (res.data?.success && res.data.data) {
           const propData = res.data.data;
           setProperty(propData);
-          addRecentlyViewed(propData);
+          addRecentlyViewed(propData.id);
         } else {
           setNotFound(true);
         }
       } catch (err) {
         console.error('Failed to load property details:', err);
-        setNotFound(true);
+        if (err.response?.status === 404) setNotFound(true);
+        else setError(err.response?.data?.error || 'Unable to load this property. Check your connection and try again.');
       } finally {
         setLoading(false);
       }
     }
 
     if (id) loadProperty();
-  }, [id]);
+  }, [id, addRecentlyViewed]);
 
   if (loading) {
     return (
@@ -65,6 +69,10 @@ export default function PropertyDetails() {
         <div className="spinner" />
       </div>
     );
+  }
+
+  if (error) {
+    return <main className="detail"><EmptyState title="Unable to load property" description={error} actionLabel="Try Again" onAction={() => window.location.reload()} /></main>;
   }
 
   if (notFound || !property) {
@@ -117,6 +125,10 @@ export default function PropertyDetails() {
           <img
             src={images[0]}
             alt={property.title}
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80';
+            }}
             onClick={() => setLightboxIndex(0)}
           />
         </a>

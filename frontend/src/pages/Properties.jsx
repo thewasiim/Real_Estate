@@ -35,7 +35,8 @@ export default function Properties() {
   const readyToMove = searchParams.get('readyToMove') === 'true';
   const selectedAmenities = searchParams.get('amenities') ? searchParams.get('amenities').split(',') : [];
   const sort = searchParams.get('sort') || 'popularityScore_desc';
-  const page = parseInt(searchParams.get('page') || '1', 10);
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
+  const amenitiesParam = searchParams.get('amenities') || '';
 
   // View state
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'list' | 'map'
@@ -46,6 +47,8 @@ export default function Properties() {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [requestKey, setRequestKey] = useState(0);
 
   // Helper to update individual query params
   const updateParam = (key, value) => {
@@ -71,8 +74,11 @@ export default function Properties() {
   };
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function loadProperties() {
       setLoading(true);
+      setError('');
       try {
         const query = {
           listingType,
@@ -93,20 +99,31 @@ export default function Properties() {
           limit: 9,
         };
 
-        const res = await propertiesApi.getAll(query);
+        const res = await propertiesApi.getAll(query, { signal: controller.signal });
         if (res.data?.success) {
           setProperties(res.data.data.items || []);
           setTotal(res.data.data.total || 0);
           setTotalPages(res.data.data.totalPages || 1);
+        } else {
+          setProperties([]);
+          setTotal(0);
+          setTotalPages(1);
+          setError('Unable to load properties. Please try again.');
         }
       } catch (err) {
+        if (err.code === 'ERR_CANCELED') return;
         console.error('Failed to fetch properties:', err);
+        setProperties([]);
+        setTotal(0);
+        setTotalPages(1);
+        setError(err.response?.data?.error || 'Unable to load properties. Check your connection and try again.');
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }
 
     loadProperties();
+    return () => controller.abort();
   }, [
     listingType,
     city,
@@ -120,9 +137,10 @@ export default function Properties() {
     maxArea,
     furnishing,
     readyToMove,
-    searchParams.get('amenities'),
+    amenitiesParam,
     sort,
     page,
+    requestKey,
   ]);
 
   return (
@@ -423,6 +441,13 @@ export default function Properties() {
                 </div>
               ))}
             </div>
+          ) : error ? (
+            <EmptyState
+              title="Unable to load properties"
+              description={error}
+              actionLabel="Try Again"
+              onAction={() => setRequestKey((key) => key + 1)}
+            />
           ) : properties.length === 0 ? (
             <EmptyState
               title="No properties match your filters"

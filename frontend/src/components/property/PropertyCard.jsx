@@ -29,7 +29,15 @@ export default function PropertyCard({ property }) {
     <article className="property-card">
       <div className="property-image">
         <Link to={`/properties/${property.id}`} className="image-link">
-          <img src={coverImage} alt={property.title} loading="lazy" />
+          <img
+            src={coverImage}
+            alt={property.title}
+            loading="lazy"
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = fallbackImage;
+            }}
+          />
         </Link>
         <span className="badge">
           {property.listingType === 'RENT' ? 'FOR RENT' : property.status || 'FOR SALE'}

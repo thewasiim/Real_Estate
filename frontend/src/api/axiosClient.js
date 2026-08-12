@@ -1,5 +1,17 @@
 import axios from 'axios';
 
+function getApiBaseUrl() {
+  const configuredUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+
+  if (!configuredUrl) return '/api';
+
+  // Render exposes the API service at its root, while this client owns the
+  // `/api` prefix. Accept either the service URL or an already-prefixed URL
+  // without allowing an accidental `/api/api` request path.
+  const normalizedUrl = configuredUrl.replace(/\/+$/, '').replace(/(?:\/api){2,}$/, '/api');
+  return normalizedUrl.endsWith('/api') ? normalizedUrl : normalizedUrl + '/api';
+}
+
 /**
  * Central Axios instance.
  * - In development: Vite proxy handles /api → localhost:4000
@@ -9,7 +21,8 @@ import axios from 'axios';
  * (withCredentials) and error shape are centralized.
  */
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: getApiBaseUrl(),
+  timeout: 15000,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

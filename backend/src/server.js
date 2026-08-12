@@ -26,8 +26,17 @@ const PORT = process.env.PORT || 4000;
 // Security & parsing middleware
 // ──────────────────────────────────────
 app.use(helmet());
+const allowedOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((origin) => origin.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin(origin, callback) {
+    // Requests without an Origin header (health checks, curl) are not browsers.
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) return callback(null, true);
+    return callback(null, false);
+  },
   credentials: true,
 }));
 app.use(cookieParser());

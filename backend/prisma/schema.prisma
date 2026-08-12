@@ -89,6 +89,9 @@ model Property {
   @@index([listingType])
   @@index([isFeatured])
   @@index([city, type, listingType])
+  @@index([listingType, popularityScore])
+  @@index([listingType, price])
+  @@index([listingType, createdAt])
 }
 
 model Project {
