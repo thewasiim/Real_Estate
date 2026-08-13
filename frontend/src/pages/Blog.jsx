@@ -78,42 +78,31 @@ export default function Blog() {
           <>
             {/* Featured first post */}
             {page === 1 && posts[0] && (
-              <Link className="blog-page__featured-link" to={`/blog/${posts[0].slug || posts[0].id}`} style={{ textDecoration: 'none', display: 'block', marginBottom: '48px' }}>
-                <article className="blog-page__featured" style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
-                  gap: '0',
-                  border: '1px solid var(--line)',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  background: '#fff',
-                  transition: 'box-shadow 0.3s',
-                }}
-                  onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.1)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; }}
-                >
-                  <div className="blog-page__featured-media" style={{ overflow: 'hidden', maxHeight: '420px' }}>
+              <Link className="blog-page__featured-link" to={`/blog/${posts[0].slug || posts[0].id}`}>
+                <article className="blog-page__featured">
+                  <div className="blog-page__featured-media">
                     <img
                       src={posts[0].coverUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'}
                       alt={posts[0].title}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     />
                   </div>
-                  <div className="blog-page__featured-content" style={{ padding: '48px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <div className="blog-page__featured-content">
                     <p className="eyebrow" style={{ marginBottom: '12px', color: 'var(--color-accent)' }}>FEATURED STORY</p>
                     <h2 className="blog-page__title" style={{
                       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", sans-serif',
-                      fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
-                      lineHeight: 1.2,
-                      marginBottom: '16px',
+                      fontSize: 'clamp(1.3rem, 3.5vw, 2rem)',
+                      lineHeight: 1.25,
+                      marginBottom: '14px',
                       color: 'var(--ink)',
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
                     }}>
                       {posts[0].title}
                     </h2>
-                    <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.7, marginBottom: '28px' }}>
+                    <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.7, marginBottom: '24px', wordBreak: 'break-word' }}>
                       {posts[0].excerpt}
                     </p>
-                    <div className="blog-page__meta blog-page__featured-meta" style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '11px', color: 'var(--muted)', fontWeight: 600, marginBottom: '24px' }}>
+                    <div className="blog-page__meta blog-page__featured-meta" style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '11px', color: 'var(--muted)', fontWeight: 600, marginBottom: '24px', flexWrap: 'wrap' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                         <Calendar size={12} /> {new Date(posts[0].date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </span>
