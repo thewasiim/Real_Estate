@@ -245,6 +245,87 @@ p {
   border-color: var(--color-ink);
 }
 
+/* Blog responsive layout */
+.blog-page,
+.blog-page__content,
+.blog-page__featured,
+.blog-page__featured-content,
+.blog-page__grid,
+.blog-page__card-content {
+  min-width: 0;
+}
+
+.blog-page__title,
+.blog-page__featured-content p,
+.blog-page__card-content p,
+.blog-page__meta span {
+  overflow-wrap: anywhere;
+}
+
+.blog-page__meta {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .blog-page {
+    padding-top: 92px !important;
+    padding-bottom: 64px !important;
+  }
+
+  .blog-page__header {
+    padding-bottom: 44px !important;
+  }
+
+  .blog-page__featured-link {
+    margin-bottom: 28px !important;
+  }
+
+  .blog-page__featured {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .blog-page__featured-media {
+    max-height: none !important;
+    aspect-ratio: 16 / 10;
+  }
+
+  .blog-page__featured-media img {
+    height: 100% !important;
+  }
+
+  .blog-page__featured-content {
+    padding: 28px !important;
+  }
+
+  .blog-page__grid {
+    gap: 20px !important;
+  }
+
+  .blog-page__card-content {
+    padding: 20px !important;
+  }
+
+  .blog-page__pagination {
+    flex-wrap: wrap;
+    margin-top: 44px !important;
+  }
+}
+
+@media (max-width: 374px) {
+  .blog-page__featured-content {
+    padding: 20px !important;
+  }
+
+  .blog-page__pagination {
+    gap: 8px !important;
+  }
+
+  .blog-page__pagination .btn {
+    padding-right: 14px !important;
+    padding-left: 14px !important;
+  }
+}
+
 /* ──────────────────────────────────────────────────────────────────────────
    4. NAVBAR (design.md §9, §16)
    ────────────────────────────────────────────────────────────────────────── */

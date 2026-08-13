@@ -39,9 +39,9 @@ export default function Blog() {
   };
 
   return (
-    <main style={{ paddingTop: '100px', paddingBottom: '80px' }}>
+    <main className="blog-page" style={{ paddingTop: '100px', paddingBottom: '80px' }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', padding: '0 var(--gutter) 64px' }}>
+      <div className="blog-page__header" style={{ textAlign: 'center', padding: '0 var(--gutter) 64px' }}>
         <p className="eyebrow" style={{ marginBottom: '10px' }}>THE JOURNAL</p>
         <h1 style={{
           fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", sans-serif',
@@ -57,7 +57,7 @@ export default function Blog() {
       </div>
 
       {/* Content */}
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 var(--gutter)' }}>
+      <div className="blog-page__content" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 var(--gutter)' }}>
         {loading ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', paddingTop: '60px' }}>
             <Loader2 size={28} className="animate-spin" style={{ color: 'var(--color-accent)' }} />
@@ -78,8 +78,8 @@ export default function Blog() {
           <>
             {/* Featured first post */}
             {page === 1 && posts[0] && (
-              <Link to={`/blog/${posts[0].slug || posts[0].id}`} style={{ textDecoration: 'none', display: 'block', marginBottom: '48px' }}>
-                <article style={{
+              <Link className="blog-page__featured-link" to={`/blog/${posts[0].slug || posts[0].id}`} style={{ textDecoration: 'none', display: 'block', marginBottom: '48px' }}>
+                <article className="blog-page__featured" style={{
                   display: 'grid',
                   gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
                   gap: '0',
@@ -92,16 +92,16 @@ export default function Blog() {
                   onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.1)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; }}
                 >
-                  <div style={{ overflow: 'hidden', maxHeight: '420px' }}>
+                  <div className="blog-page__featured-media" style={{ overflow: 'hidden', maxHeight: '420px' }}>
                     <img
                       src={posts[0].coverUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'}
                       alt={posts[0].title}
                       style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     />
                   </div>
-                  <div style={{ padding: '48px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                  <div className="blog-page__featured-content" style={{ padding: '48px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                     <p className="eyebrow" style={{ marginBottom: '12px', color: 'var(--color-accent)' }}>FEATURED STORY</p>
-                    <h2 style={{
+                    <h2 className="blog-page__title" style={{
                       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", sans-serif',
                       fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
                       lineHeight: 1.2,
@@ -113,7 +113,7 @@ export default function Blog() {
                     <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.7, marginBottom: '28px' }}>
                       {posts[0].excerpt}
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '11px', color: 'var(--muted)', fontWeight: 600, marginBottom: '24px' }}>
+                    <div className="blog-page__meta blog-page__featured-meta" style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '11px', color: 'var(--muted)', fontWeight: 600, marginBottom: '24px' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                         <Calendar size={12} /> {new Date(posts[0].date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </span>
@@ -130,7 +130,7 @@ export default function Blog() {
             )}
 
             {/* Grid of remaining posts */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '28px' }}>
+            <div className="blog-page__grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(300px, 100%), 1fr))', gap: '28px' }}>
               {(page === 1 ? posts.slice(1) : posts).map((post) => (
                 <Link
                   key={post.id}
@@ -154,8 +154,8 @@ export default function Blog() {
                         onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
                       />
                     </div>
-                    <div style={{ padding: '24px' }}>
-                      <div style={{ display: 'flex', gap: '14px', fontSize: '10px', color: 'var(--muted)', fontWeight: 600, letterSpacing: '.04em', marginBottom: '12px' }}>
+                    <div className="blog-page__card-content" style={{ padding: '24px' }}>
+                      <div className="blog-page__meta" style={{ display: 'flex', gap: '14px', fontSize: '10px', color: 'var(--muted)', fontWeight: 600, letterSpacing: '.04em', marginBottom: '12px' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <Calendar size={11} /> {new Date(post.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                         </span>
@@ -163,7 +163,7 @@ export default function Blog() {
                           <Clock size={11} /> {estimateReadTime(post.content)} min
                         </span>
                       </div>
-                      <h3 style={{
+                      <h3 className="blog-page__title" style={{
                         fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", sans-serif',
                         fontSize: '1rem', fontWeight: 700, lineHeight: 1.35, marginBottom: '10px', color: 'var(--ink)',
                       }}>
@@ -183,7 +183,7 @@ export default function Blog() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginTop: '64px' }}>
+              <div className="blog-page__pagination" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginTop: '64px' }}>
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
