@@ -8,24 +8,24 @@ import { requireRole } from '../middleware/requireRole.js';
 const router = Router();
 
 const propertySchema = z.object({
-  slug:         z.string().min(1),
-  title:        z.string().min(1),
-  type:         z.string().min(1),
+  slug:         z.string().trim().min(1).max(200),
+  title:        z.string().trim().min(2, 'Title must be at least 2 characters').max(150, 'Title cannot exceed 150 characters'),
+  type:         z.string().trim().min(1),
   listingType:  z.enum(['BUY', 'RENT']),
-  status:       z.string().min(1),
-  price:        z.number().int().positive(),
-  city:         z.string().min(1),
-  locality:     z.string().min(1),
-  address:      z.string().min(1),
-  area:         z.number().int().positive(),
-  bhk:          z.number().int().min(1),
-  bathrooms:    z.number().int().min(1),
-  parking:      z.number().int().min(0),
-  furnishing:   z.string().min(1),
+  status:       z.string().trim().min(1),
+  price:        z.number().positive('Price must be greater than 0'),
+  city:         z.string().trim().min(1),
+  locality:     z.string().trim().min(1),
+  address:      z.string().trim().min(1),
+  area:         z.number().positive('Area must be greater than 0'),
+  bhk:          z.number().int().min(1, 'BHK must be at least 1'),
+  bathrooms:    z.number().int().min(1, 'Bathrooms must be at least 1'),
+  parking:      z.number().int().min(0, 'Parking slots cannot be negative'),
+  furnishing:   z.string().trim().min(1),
   amenities:    z.array(z.string()).default([]),
   images:       z.array(z.string()).default([]),
   floorPlans:   z.array(z.string()).default([]),
-  description:  z.string().min(1),
+  description:  z.string().trim().min(1, 'Description is required').max(5000, 'Description cannot exceed 5000 characters'),
   nearbySchools:   z.array(z.string()).default([]),
   nearbyHospitals: z.array(z.string()).default([]),
   nearbyMetro:     z.array(z.string()).default([]),
@@ -35,7 +35,7 @@ const propertySchema = z.object({
   agentId:      z.string().optional(),
   videoTourUrl: z.string().optional(),
   tourUrl360:   z.string().optional(),
-}).strict();
+});
 
 // Public
 router.get('/',    propertyController.getAll);

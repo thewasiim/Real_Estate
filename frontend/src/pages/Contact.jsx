@@ -2,28 +2,57 @@ import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { leadsApi } from '../api/leadsApi';
 import Button from '../components/ui/Button';
+import { validateName, validateEmail, validatePhone, validateText } from '../utils/validators';
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: null }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    const nameErr = validateName(form.name, 'Full Name');
+    if (nameErr) errors.name = nameErr;
+
+    const emailErr = validateEmail(form.email);
+    if (emailErr) errors.email = emailErr;
+
+    const phoneErr = validatePhone(form.phone, true);
+    if (phoneErr) errors.phone = phoneErr;
+
+    const messageErr = validateText(form.message, 'Message', { min: 5, max: 2000 });
+    if (messageErr) errors.message = messageErr;
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await leadsApi.create({
         type: 'CONTACT',
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        message: `Subject: ${form.subject}\n\n${form.message}`,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        message: form.subject ? `Subject: ${form.subject}\n\n${form.message.trim()}` : form.message.trim(),
       });
       if (res.data?.success) {
         setSubmitted(true);
@@ -108,21 +137,24 @@ export default function Contact() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '14px' }}>
+              <form onSubmit={handleSubmit} noValidate style={{ display: 'grid', gap: '14px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div className="form-group">
                     <label htmlFor="contact-name">Full Name *</label>
-                    <input id="contact-name" name="name" type="text" required value={form.name} onChange={handleChange} placeholder="Your full name" />
+                    <input id="contact-name" name="name" type="text" value={form.name} onChange={handleChange} placeholder="Your full name" maxLength={50} />
+                    {fieldErrors.name && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.name}</span>}
                   </div>
                   <div className="form-group">
                     <label htmlFor="contact-phone">Phone Number *</label>
-                    <input id="contact-phone" name="phone" type="tel" required value={form.phone} onChange={handleChange} placeholder="+91 XXXXX XXXXX" />
+                    <input id="contact-phone" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="10-digit mobile number" maxLength={15} />
+                    {fieldErrors.phone && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.phone}</span>}
                   </div>
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="contact-email">Email Address *</label>
-                  <input id="contact-email" name="email" type="email" required value={form.email} onChange={handleChange} placeholder="your@email.com" />
+                  <input id="contact-email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="your@email.com" maxLength={100} />
+                  {fieldErrors.email && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.email}</span>}
                 </div>
 
                 <div className="form-group">
@@ -141,10 +173,12 @@ export default function Contact() {
                 <div className="form-group">
                   <label htmlFor="contact-message">Message *</label>
                   <textarea
-                    id="contact-message" name="message" rows={4} required
+                    id="contact-message" name="message" rows={4}
                     value={form.message} onChange={handleChange}
                     placeholder="Tell us about your real estate requirements..."
+                    maxLength={2000}
                   />
+                  {fieldErrors.message && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.message}</span>}
                 </div>
 
                 <Button dark type="submit" disabled={loading} style={{ marginTop: '8px', width: '100%', justifyContent: 'center', gap: '8px' }}>
@@ -158,3 +192,4 @@ export default function Contact() {
     </main>
   );
 }
+

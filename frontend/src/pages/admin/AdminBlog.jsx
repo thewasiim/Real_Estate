@@ -13,6 +13,7 @@ import {
 import { blogApi } from '../../api/blogApi';
 import ImageUploader from '../../components/admin/ImageUploader';
 import ConfirmModal from '../../components/admin/ConfirmModal';
+import { validateText } from '../../utils/validators';
 
 export default function AdminBlog() {
   const [posts, setPosts] = useState([]);
@@ -92,8 +93,18 @@ export default function AdminBlog() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.title || !formData.excerpt || !formData.content || !formData.coverUrl) {
-      showToast('Please fill all required fields', 'error');
+
+    const titleErr = validateText(formData.title, 'Title', { min: 2, max: 200, required: true });
+    if (titleErr) { showToast(titleErr, 'error'); return; }
+
+    const excerptErr = validateText(formData.excerpt, 'Excerpt', { min: 10, max: 500, required: true });
+    if (excerptErr) { showToast(excerptErr, 'error'); return; }
+
+    const contentErr = validateText(formData.content, 'Content', { min: 20, max: 50000, required: true });
+    if (contentErr) { showToast(contentErr, 'error'); return; }
+
+    if (!formData.coverUrl) {
+      showToast('Cover image is required', 'error');
       return;
     }
 
@@ -101,6 +112,10 @@ export default function AdminBlog() {
       setSubmitting(true);
       const payload = {
         ...formData,
+        title: formData.title.trim(),
+        excerpt: formData.excerpt.trim(),
+        content: formData.content.trim(),
+        author: formData.author.trim() || 'F.B. Developer Editorial',
         slug: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),
       };
 

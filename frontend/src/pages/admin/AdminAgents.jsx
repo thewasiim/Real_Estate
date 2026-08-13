@@ -16,6 +16,7 @@ import {
 import { agentsApi } from '../../api/agentsApi';
 import ImageUploader from '../../components/admin/ImageUploader';
 import ConfirmModal from '../../components/admin/ConfirmModal';
+import { validateName, validateEmail, validatePhone, validateNumber } from '../../utils/validators';
 
 const CITIES = ['Mumbai', 'Delhi NCR', 'Bengaluru', 'Hyderabad', 'Pune', 'Goa'];
 
@@ -103,15 +104,27 @@ export default function AdminAgents() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.phone || !formData.photoUrl) {
-      showToast('Please fill all required fields', 'error');
-      return;
-    }
+
+    const nameErr = validateName(formData.name, 'Full Name');
+    if (nameErr) { showToast(nameErr, 'error'); return; }
+
+    const emailErr = validateEmail(formData.email);
+    if (emailErr) { showToast(emailErr, 'error'); return; }
+
+    const phoneErr = validatePhone(formData.phone, true);
+    if (phoneErr) { showToast(phoneErr, 'error'); return; }
+
+    const expErr = validateNumber(formData.experienceYears, 'Experience Years', { min: 0, max: 70, integer: true });
+    if (expErr) { showToast(expErr, 'error'); return; }
 
     try {
       setSubmitting(true);
       const payload = {
         ...formData,
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        whatsapp: formData.whatsapp?.trim() || formData.phone.trim(),
         experienceYears: Number(formData.experienceYears),
       };
 

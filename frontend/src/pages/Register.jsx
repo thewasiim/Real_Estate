@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ArrowRight, User, Mail, Lock, Phone, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
+import { validateName, validateEmail, validatePhone, validatePassword } from '../utils/validators';
 
 export default function Register() {
   const { register, isLoggedIn } = useAuth();
@@ -11,6 +12,7 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -21,12 +23,37 @@ export default function Register() {
     }
   }, [isLoggedIn, navigate]);
 
+  const validateForm = () => {
+    const errors = {};
+    const nameErr = validateName(name, 'Full Name');
+    if (nameErr) errors.name = nameErr;
+
+    const emailErr = validateEmail(email);
+    if (emailErr) errors.email = emailErr;
+
+    if (phone.trim()) {
+      const phoneErr = validatePhone(phone, false);
+      if (phoneErr) errors.phone = phoneErr;
+    }
+
+    const passErr = validatePassword(password);
+    if (passErr) errors.password = passErr;
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await register({ name, email, password, phone: phone || undefined });
+      const res = await register({ name: name.trim(), email: email.trim(), password, phone: phone.trim() || undefined });
       if (res.success) {
         navigate('/');
       } else {
@@ -56,7 +83,7 @@ export default function Register() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} noValidate className="auth-form">
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
             <div className="input-icon-wrapper">
@@ -64,13 +91,17 @@ export default function Register() {
               <input
                 id="name"
                 type="text"
-                required
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (fieldErrors.name) setFieldErrors({ ...fieldErrors, name: null });
+                }}
                 placeholder="John Doe"
                 autoComplete="name"
+                maxLength={50}
               />
             </div>
+            {fieldErrors.name && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.name}</span>}
           </div>
 
           <div className="form-group">
@@ -80,13 +111,17 @@ export default function Register() {
               <input
                 id="email"
                 type="email"
-                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: null });
+                }}
                 placeholder="you@example.com"
                 autoComplete="email"
+                maxLength={100}
               />
             </div>
+            {fieldErrors.email && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.email}</span>}
           </div>
 
           <div className="form-group">
@@ -97,11 +132,16 @@ export default function Register() {
                 id="phone"
                 type="tel"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 98765 43210"
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  if (fieldErrors.phone) setFieldErrors({ ...fieldErrors, phone: null });
+                }}
+                placeholder="10-digit mobile number"
                 autoComplete="tel"
+                maxLength={15}
               />
             </div>
+            {fieldErrors.phone && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.phone}</span>}
           </div>
 
           <div className="form-group">
@@ -111,13 +151,17 @@ export default function Register() {
               <input
                 id="password"
                 type="password"
-                required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: null });
+                }}
                 placeholder="••••••••"
                 autoComplete="new-password"
+                maxLength={100}
               />
             </div>
+            {fieldErrors.password && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.password}</span>}
           </div>
 
           <Button dark type="submit" disabled={loading} className="w-full auth-submit">
@@ -137,3 +181,4 @@ export default function Register() {
     </main>
   );
 }
+

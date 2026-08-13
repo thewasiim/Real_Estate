@@ -14,6 +14,7 @@ import {
 import { projectsApi } from '../../api/projectsApi';
 import ImageUploader from '../../components/admin/ImageUploader';
 import ConfirmModal from '../../components/admin/ConfirmModal';
+import { validateText, validateNumber } from '../../utils/validators';
 
 const CITIES = ['Mumbai', 'Delhi NCR', 'Bengaluru', 'Hyderabad', 'Pune', 'Goa'];
 const STAGES = ['Under Construction', 'RERA Approved', 'Nearing Possession', 'Ready'];
@@ -112,15 +113,22 @@ export default function AdminProjects() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.startingPrice || !formData.city) {
-      showToast('Please fill all required fields', 'error');
-      return;
-    }
+
+    const nameErr = validateText(formData.name, 'Project Name', { min: 2, max: 150, required: true });
+    if (nameErr) { showToast(nameErr, 'error'); return; }
+
+    const priceErr = validateNumber(formData.startingPrice, 'Starting Price', { min: 1, required: true });
+    if (priceErr) { showToast(priceErr, 'error'); return; }
+
+    if (!formData.city) { showToast('City is required', 'error'); return; }
+    if (!formData.locality?.trim()) { showToast('Locality is required', 'error'); return; }
 
     try {
       setSubmitting(true);
       const payload = {
         ...formData,
+        name: formData.name.trim(),
+        locality: formData.locality.trim(),
         startingPrice: Number(formData.startingPrice),
         possessionDate: new Date(formData.possessionDate).toISOString(),
         slug: formData.slug || formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''),

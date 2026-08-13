@@ -17,6 +17,7 @@ import { propertiesApi } from '../../api/propertiesApi';
 import { agentsApi } from '../../api/agentsApi';
 import ImageUploader from '../../components/admin/ImageUploader';
 import ConfirmModal from '../../components/admin/ConfirmModal';
+import { validateText, validateNumber } from '../../utils/validators';
 
 const CITIES = ['Mumbai', 'Delhi NCR', 'Bengaluru', 'Hyderabad', 'Pune', 'Goa'];
 const PROP_TYPES = ['Apartment', 'Villa', 'Penthouse', 'Commercial', 'Plot'];
@@ -160,15 +161,26 @@ export default function AdminProperties() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.title || !formData.price || !formData.city || !formData.address) {
-      showToast('Please fill all required fields', 'error');
-      return;
-    }
+
+    const titleErr = validateText(formData.title, 'Property Title', { min: 2, max: 150, required: true });
+    if (titleErr) { showToast(titleErr, 'error'); return; }
+
+    const priceErr = validateNumber(formData.price, 'Price', { min: 1, required: true });
+    if (priceErr) { showToast(priceErr, 'error'); return; }
+
+    const areaErr = validateNumber(formData.area, 'Area', { min: 1, required: true });
+    if (areaErr) { showToast(areaErr, 'error'); return; }
+
+    if (!formData.city) { showToast('City is required', 'error'); return; }
+    if (!formData.address?.trim()) { showToast('Full address is required', 'error'); return; }
 
     try {
       setSubmitting(true);
       const payload = {
         ...formData,
+        title: formData.title.trim(),
+        address: formData.address.trim(),
+        locality: formData.locality?.trim(),
         price: Number(formData.price),
         area: Number(formData.area),
         bhk: Number(formData.bhk),

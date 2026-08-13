@@ -1,7 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MessageCircle } from 'lucide-react';
+import { ArrowRight, MessageCircle, Check } from 'lucide-react';
 import Reveal from '../components/shared/Reveal';
+import { leadsApi } from '../api/leadsApi';
+import { validateEmail } from '../utils/validators';
+
+function NewsletterForm() {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    const emailErr = validateEmail(email);
+    if (emailErr) {
+      setError(emailErr);
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await leadsApi.create({ type: 'NEWSLETTER', email: email.trim() });
+      if (res.data?.success) {
+        setSuccess(true);
+        setEmail('');
+      } else {
+        setError('Failed to subscribe.');
+      }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to subscribe.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      {success ? (
+        <p style={{ color: '#38A169', fontSize: '13px', fontWeight: 600 }}>
+          <Check size={14} style={{ display: 'inline', marginRight: '4px' }} /> Thank you for subscribing!
+        </p>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div className="newsletter">
+            <input
+              placeholder="Your email address"
+              aria-label="Email address"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError('');
+              }}
+              maxLength={100}
+            />
+            <button type="submit" aria-label="Subscribe" disabled={loading}>
+              <ArrowRight size={16} />
+            </button>
+          </div>
+          {error && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{error}</span>}
+        </form>
+      )}
+    </div>
+  );
+}
 
 export default function Footer() {
   return (
@@ -42,12 +104,7 @@ export default function Footer() {
         <div>
           <h4>A note from F.B. Developer</h4>
           <p>Design, destinations and the homes in between.</p>
-          <div className="newsletter">
-            <input placeholder="Your email address" aria-label="Email address" />
-            <button aria-label="Subscribe">
-              <ArrowRight size={16} />
-            </button>
-          </div>
+          <NewsletterForm />
         </div>
       </div>
 

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { faqsApi } from '../../api/faqsApi';
 import ConfirmModal from '../../components/admin/ConfirmModal';
+import { validateText } from '../../utils/validators';
 
 export default function AdminFaq() {
   const [faqs, setFaqs] = useState([]);
@@ -83,19 +84,26 @@ export default function AdminFaq() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.question || !formData.answer) {
-      showToast('Please fill all required fields', 'error');
-      return;
-    }
+
+    const questionErr = validateText(formData.question, 'Question', { min: 5, max: 500, required: true });
+    if (questionErr) { showToast(questionErr, 'error'); return; }
+
+    const answerErr = validateText(formData.answer, 'Answer', { min: 5, max: 2000, required: true });
+    if (answerErr) { showToast(answerErr, 'error'); return; }
 
     try {
       setSubmitting(true);
 
+      const payload = {
+        question: formData.question.trim(),
+        answer: formData.answer.trim(),
+      };
+
       if (editingId) {
-        await faqsApi.update(editingId, formData);
+        await faqsApi.update(editingId, payload);
         showToast('FAQ updated');
       } else {
-        await faqsApi.create(formData);
+        await faqsApi.create(payload);
         showToast('FAQ created');
       }
 

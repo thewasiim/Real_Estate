@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { ArrowRight, Mail, Lock, AlertCircle } from 'lucide-react';
 import Button from '../components/ui/Button';
+import { validateEmail, validatePassword } from '../utils/validators';
 
 export default function Login() {
   const { login, isLoggedIn } = useAuth();
@@ -10,6 +11,7 @@ export default function Login() {
   const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,13 +22,30 @@ export default function Login() {
     }
   }, [isLoggedIn, navigate]);
 
+  const validateForm = () => {
+    const errors = {};
+    const emailErr = validateEmail(email);
+    if (emailErr) errors.email = emailErr;
+
+    const passErr = validatePassword(password);
+    if (passErr) errors.password = passErr;
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     try {
       const from = location.state?.from?.pathname || '/';
-      const res = await login(email, password);
+      const res = await login(email.trim(), password);
       if (res.success) {
         navigate(from, { replace: true });
       } else {
@@ -56,7 +75,7 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} noValidate className="auth-form">
           <div className="form-group">
             <label htmlFor="email">Email Address</label>
             <div className="input-icon-wrapper">
@@ -64,13 +83,17 @@ export default function Login() {
               <input
                 id="email"
                 type="email"
-                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (fieldErrors.email) setFieldErrors({ ...fieldErrors, email: null });
+                }}
                 placeholder="you@example.com"
                 autoComplete="email"
+                maxLength={100}
               />
             </div>
+            {fieldErrors.email && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.email}</span>}
           </div>
 
           <div className="form-group">
@@ -85,13 +108,17 @@ export default function Login() {
               <input
                 id="password"
                 type="password"
-                required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (fieldErrors.password) setFieldErrors({ ...fieldErrors, password: null });
+                }}
                 placeholder="••••••••"
                 autoComplete="current-password"
+                maxLength={100}
               />
             </div>
+            {fieldErrors.password && <span style={{ color: '#e53e3e', fontSize: '11px', marginTop: '4px', display: 'block' }}>{fieldErrors.password}</span>}
           </div>
 
           <Button dark type="submit" disabled={loading} className="w-full auth-submit">
@@ -111,3 +138,4 @@ export default function Login() {
     </main>
   );
 }
+

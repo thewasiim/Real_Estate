@@ -14,6 +14,7 @@ import {
 import { testimonialsApi } from '../../api/testimonialsApi';
 import ImageUploader from '../../components/admin/ImageUploader';
 import ConfirmModal from '../../components/admin/ConfirmModal';
+import { validateName, validateText, validateNumber } from '../../utils/validators';
 
 export default function AdminTestimonials() {
   const [testimonials, setTestimonials] = useState([]);
@@ -89,15 +90,22 @@ export default function AdminTestimonials() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.review || !formData.photoUrl) {
-      showToast('Please fill all required fields', 'error');
-      return;
-    }
+
+    const nameErr = validateName(formData.name, 'Client Name');
+    if (nameErr) { showToast(nameErr, 'error'); return; }
+
+    const reviewErr = validateText(formData.review, 'Review', { min: 10, max: 1000, required: true });
+    if (reviewErr) { showToast(reviewErr, 'error'); return; }
+
+    const ratingErr = validateNumber(formData.rating, 'Rating', { min: 1, max: 5, integer: true });
+    if (ratingErr) { showToast(ratingErr, 'error'); return; }
 
     try {
       setSubmitting(true);
       const payload = {
         ...formData,
+        name: formData.name.trim(),
+        review: formData.review.trim(),
         rating: Number(formData.rating),
       };
 

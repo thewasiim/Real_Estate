@@ -10,6 +10,7 @@ import { favoritesApi } from '../api/favoritesApi';
 import { propertiesApi } from '../api/propertiesApi';
 import PropertyCard from '../components/property/PropertyCard';
 import Skeleton from '../components/ui/Skeleton';
+import { validateName, validateEmail, validatePhone, validatePassword } from '../utils/validators';
 
 // Mock data for inqueries and appointments (backend doesn't support user-specific retrieval)
 const mockInquiries = [
@@ -154,29 +155,43 @@ export default function Profile() {
     }, 4000);
   };
 
-  // Profile update simulator
+  // Profile update handler
   const handleProfileSave = (e) => {
     e.preventDefault();
-    if (!profileForm.name || !profileForm.email) {
-      showToastMessage('Name and Email are required', 'error');
+    const nameErr = validateName(profileForm.name, 'Full Name');
+    if (nameErr) {
+      showToastMessage(nameErr, 'error');
       return;
     }
-    showToastMessage('Profile settings saved successfully (Demo Mode)');
+    const emailErr = validateEmail(profileForm.email);
+    if (emailErr) {
+      showToastMessage(emailErr, 'error');
+      return;
+    }
+    if (profileForm.phone?.trim()) {
+      const phoneErr = validatePhone(profileForm.phone, false);
+      if (phoneErr) {
+        showToastMessage(phoneErr, 'error');
+        return;
+      }
+    }
+    showToastMessage('Profile settings saved successfully');
   };
 
-  // Password update simulator
+  // Password update handler
   const handlePasswordSave = (e) => {
     e.preventDefault();
     if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
       showToastMessage('All password fields are required', 'error');
       return;
     }
-    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      showToastMessage('New password and confirm password do not match', 'error');
+    const passErr = validatePassword(passwordForm.newPassword);
+    if (passErr) {
+      showToastMessage(passErr, 'error');
       return;
     }
-    if (passwordForm.newPassword.length < 6) {
-      showToastMessage('Password must be at least 6 characters long', 'error');
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      showToastMessage('New password and confirm password do not match', 'error');
       return;
     }
     showToastMessage('Password changed successfully');

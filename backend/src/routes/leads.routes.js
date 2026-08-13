@@ -11,18 +11,30 @@ const router = Router();
 // Base lead schema with type-specific conditional validation per trd.md §5.6
 const baseLeadSchema = z.object({
   type:          z.enum(['SCHEDULE_VISIT', 'BOOK_SITE_VISIT', 'CONTACT', 'NEWSLETTER']),
-  name:          z.string().optional(),
-  email:         z.string().email('Invalid email address'),
-  phone:         z.string().optional(),
-  message:       z.string().optional(),
-  propertyId:    z.string().optional(),
-  preferredDate: z.string().optional(),
-  preferredTime: z.string().optional(),
+  name:          z.string().trim().optional(),
+  email:         z.string().trim().email('Invalid email address').max(100, 'Email cannot exceed 100 characters'),
+  phone:         z.string().trim().optional(),
+  message:       z.string().trim().max(2000, 'Message cannot exceed 2000 characters').optional(),
+  propertyId:    z.string().trim().optional(),
+  preferredDate: z.string().trim().optional(),
+  preferredTime: z.string().trim().optional(),
 }).superRefine((data, ctx) => {
   if (data.type === 'NEWSLETTER') return; // only email required
 
-  if (!data.name)  ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Name is required',  path: ['name'] });
-  if (!data.phone) ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Phone is required', path: ['phone'] });
+  if (!data.name || data.name.trim().length < 2) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Name must be at least 2 characters', path: ['name'] });
+  } else if (!/^[a-zA-Z\s]+$/.test(data.name.trim())) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Name must contain only letters and spaces', path: ['name'] });
+  }
+
+  if (!data.phone) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Phone is required', path: ['phone'] });
+  } else {
+    const cleanPhone = data.phone.replace(/^(\+91|0)/, '').replace(/\s+/g, '');
+    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Phone number must be a valid 10-digit Indian mobile number', path: ['phone'] });
+    }
+  }
 
   if (data.type === 'SCHEDULE_VISIT') {
     if (!data.propertyId)    ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'Property ID is required',   path: ['propertyId'] });
