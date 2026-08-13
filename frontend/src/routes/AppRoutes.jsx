@@ -9,6 +9,8 @@ import AdminLayout from '../layout/admin/AdminLayout';
 import NotFound from '../pages/NotFound';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
 import Home from '../pages/Home';
 import Properties from '../pages/Properties';
 import PropertyDetails from '../pages/PropertyDetails';
@@ -65,6 +67,8 @@ export default function AppRoutes() {
       {/* Auth routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Protected user routes */}
       <Route path="/favorites" element={<Navigate to="/profile" replace />} />
