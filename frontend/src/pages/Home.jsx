@@ -407,9 +407,11 @@ export default function Home() {
               </div>
             ))
           ) : projects.length > 0 ? (
-            projects.map((proj) => (
+            projects.map((proj) => {
+              const projectPath = `/projects/${proj.id}`;
+              return (
               <article key={proj.id} className="project-card">
-                <div className="project-img-wrap">
+                <Link to={projectPath} className="project-img-wrap project-image-link cursor-pointer" aria-label={`View ${proj.name}`}>
                   <img
                     src={proj.images?.[0] || 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80'}
                     alt={proj.name}
@@ -417,7 +419,7 @@ export default function Home() {
                   <span className="badge">
                     {proj.statusStage?.toUpperCase() || 'UPCOMING'}
                   </span>
-                </div>
+                </Link>
 
                 <div className="project-card-body">
                   <p className="eyebrow" style={{ marginBottom: '4px' }}>
@@ -454,12 +456,13 @@ export default function Home() {
                     <span className="step">Ready 2028</span>
                   </div>
 
-                  <Link to={`/projects/${proj.id}`} className="btn btn-dark view-project-btn">
+                  <Link to={projectPath} className="btn btn-dark view-project-btn">
                     View Project <ArrowRight size={14} />
                   </Link>
                 </div>
               </article>
-            ))
+              );
+            })
           ) : (
             <p style={{ color: 'var(--color-ink-muted)' }}>No projects available.</p>
           )}
