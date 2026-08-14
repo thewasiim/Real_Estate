@@ -1255,6 +1255,16 @@ p {
   margin-bottom: 12px;
 }
 
+.project-card-body h3 a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.project-card-body h3 a:hover {
+  color: var(--color-accent);
+}
+
 .project-card-meta {
   display: flex;
   flex-direction: column;

@@ -94,7 +94,9 @@ export default function Projects() {
                   <p className="eyebrow" style={{ marginBottom: '4px' }}>
                     {proj.builder} • {proj.city}
                   </p>
-                  <h3>{proj.name}</h3>
+                  <Link to={projectPath}>
+                    <h3>{proj.name}</h3>
+                  </Link>
 
                   <div className="project-card-meta">
                     <span>
